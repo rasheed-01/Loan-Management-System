@@ -1,0 +1,14 @@
+CAR LOAN
+
+ Eligibility:
+           Good Income
+           Good Credit Score
+           Good Individual risk profile
+           Minimum Age = 18years
+
+ Tenure:
+       Minimum tenure 1 year
+       Maximum tenure 10 years
+
+ Interest: 10% p.a.
+                                    

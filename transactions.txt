@@ -1,0 +1,11 @@
+shaam	5991	Home Loan	Transaction Amount:RM0.09	21-03-2021 14:05:15
+ram	7621	Car Loan	Transaction Amount:RM0.13	22-03-2021 00:21:36
+Khalid	3668	Education Loan	Transaction Amount:RM1495.51	26-03-2021 01:53:58
+rohit	7222	Personal Loan	Transaction Amount:RM0.13	22-03-2021 00:21:36
+Khalid	3668	Education Loan	Transaction Amount:RM1495.51	26-03-2021 01:53:58
+Saleem	6589	Education Loan	Transaction Amount:RM9.96	26-03-2021 07:36:24
+Saleem	6589	Education Loan	Transaction Amount:RM9.96	26-03-2021 07:37:39
+Saleem	6589	Education Loan	Transaction Amount:RM9.96	26-03-2021 07:39:16
+Rahul	3645	Education Loan	Transaction Amount:RM1495.51	05-04-2021 11:30:06
+AdnanDOn	9767	Car Loan	Transaction Amount:RM1912.23	05-04-2021 14:22:49
+adnan	9767	Car Loan	Transaction Amount:RM1912.23	05-04-2021 14:23:44

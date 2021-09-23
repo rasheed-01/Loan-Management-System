@@ -1,0 +1,7 @@
+Rahul	20	rahul1	rahul12	Sabah	rahul1@gmail.com	23774488332	Male	22/05/2000	110000.0	Education Loan	251245.12	1495.51	14	Approved	Loan ID Assigned
+hamid	20	hamid1	hamid11	sarawak	hamid1	2386872232	Male	22/09/2000	150000.0	Home Loan	87688.51	292.30	25	Rejected	Loan ID Assigned
+khalid	30	khalid1	khalid11	sabah	khalid1@gmail.com	368239832	Male	22/09/1991	50000.0	Personal Loan	105657.20	1760.95	5	Approved	Loan ID Assigned
+neil	40	neil1	neil11	putrajaya	neil2@gmail.com	2390993222	Other	02/02/1981	70000.0	Car Loan	76024.91	703.93	9	Rejected	Loan ID Assigned
+Saleem	28	saleem	saleem1	Sabah	saleem1@gmail.com	263828332	Male	22/09/1995	100000.0	Education Loan	1673.29	9.96	14	Approved	Loan ID Assigned
+Rohit	45	rohit1	rohit11	johor	rohit1@gmail.com	23643255	Male	33/98/7	200000.0	Education Loan	296094.62	2056.21	12	Rejected	Loan ID Assigned
+Adnan	20	adnan1	adnan11	Hyderaabad	adnandon11@don.com	6969696969	Male	69/69/69	6969696.0	Car Loan	114734.04	1912.23	5	Approved	Loan ID Assigned

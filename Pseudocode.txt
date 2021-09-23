@@ -1,0 +1,1402 @@
+Program: A Loan Management system of Malaysia Bank
+BEGIN
+	
+	FUNCTION main_menu()
+		DECLARE back as BOOLEAN
+		DECLARE user as INTEGER
+		
+		back=True
+		while back
+			DISPLAY ("Types Of Users:
+							1.Admin 
+							2.New customer
+							3.Registered customer
+							4.Exit")
+			DISPLAY ("Enter User Type Here:"))
+			read user
+			IF user =1
+				CALL admin
+			ELIF user =2
+				CALL new_customer
+			ELIF user = 3
+				CALL registered_customer
+			ELIF user =4
+				terminate
+			ENDIF
+		
+		ENDWHILE
+	
+	END FUNCTION
+				
+	FUNCTION Authorize_staff():
+		DECLARE username as STRING
+		DECLARE password as STRING
+		DECLARE loginInfo as ARRAY
+		
+		DISPLAY ("Enter Username: ")
+		READ username
+		DISPLAY ("Enter Password: ")
+		READ password
+		OPEN Validate.txt as f in READ MODE
+		READ contents from f
+		FOR line in f
+			IF username AND password EXISTS in f
+				return True
+			ENDIF
+		return False
+		ENDFOR
+		CLOSE f
+	
+	END FUNCTION
+	
+
+	FUNCTION admin()
+		DECLARE correct as BOOLEAN
+		
+		correct = True
+		WHILE correct
+			IF Authorize_staff()
+				DISPLAY()
+				DISPLAY("Access Granted!")
+				DISPLAY("Welcome Admin")
+				CALL admin_functions()
+			ELSE
+				DISPLAY("Access Denied")
+				DISPLAY("Please Try Again")
+				DISPLAY ()
+			ENDIF	
+		ENDWHILE
+	END FUNCTION
+
+		
+			
+	FUNCTION admin_functions()
+		DECLARE options1 as BOOLEAN
+		DECLARE exit as STRING
+		DECLARE admin_func as INTEGER
+
+		options1=True
+		while options1
+			DISPLAY("""Admin Options:
+			1.View the new customer’s registration request
+			2.Give approval to new customer to access system with their login id and password
+			3.Provide unique LoanID, instalment Date and instalment Amount per month to registered customer
+			4.View all the transactions of a specific customer
+			5.View all the transactions of specific Loan type (EL/CL/HL/PL)
+			6.View all the transactions of all the customers
+			7.View all the transactionss of all types of Loans
+			8.Exit""")
+		
+			DISPLAY ("Select an option:")
+			read admin_func
+			IF (admin_func=1)
+				CALL admin_func_1()
+			
+			ELIF (admin_func=2)
+				CALL admin_func_2()
+
+			ELIF (admin_func=3)
+				CALL admin_func_3()
+				
+			ELIF (admin_func=4)
+				CALL admin_func_4()		
+			
+			ELIF (admin_func=5)
+				CALL admin_func_5()
+
+			ELIF (admin_func=6)
+				CALL admin_func_6()
+			
+			ELIF (admin_func=7)
+				CALL admin_func_7
+				
+			ELIF (admin_func==8)
+				CALL admin_func_8
+				
+			ELIF (admin_func==9)
+				CALL admin_func_9
+				
+			ELIF (admin_func==10)
+				CALL main_menu()
+				
+			ELSE
+				DISPLAY("Invalid Entry")
+				DISPLAY("Please Try Again")
+				
+			ENDIF
+			DISPLAY("Enter any key to go back to Admin Options:")
+			READ exit
+		ENDWHILE
+	END FUNCTION
+	
+	FUNCTION admin_func_1()
+		DECLARE record as BOOLEAN
+		DECLARE nfile_read as ARRAY
+		
+		OPEN Customers.txt as nfile in READ MODE
+		READ contents from nfile
+		record=False
+		FOR line in nfile
+			SPLIT line to nfile_read
+			IF "Pending Approval" =nfile_read[14]
+				DISPLAY line
+				record=True
+			ENDIF
+		ENDFOR
+		IF record=True
+			pass
+		ELSE
+			DISPLAY("No new pending registeration requests")
+		ENDIF
+		CLOSE nfile
+	
+	END FUNCTION
+	
+	
+	FUNCTION admin_func_2
+		DECLARE approval as STRING
+		DECLARE data as STRING
+		DECLARE data1 as STRING
+		DECLARE tam as STRING
+		DECLARE testlist as ARRAY
+		DECLARE thebiglist as ARRAY
+		DECLARE tine as ARRAY
+		DECLARE k as INTEGER
+		DECLARE j as INTEGER
+		OPEN Customers.txt as nfile in READ MODE
+		READ contents frpom nfile
+		for line in nfile
+			if "Pending Approval" EXISTS in line 
+				DISPLAY(line)
+		DISPLAY("Enter what you want to do
+				1. Approve all together
+				2. Reject All together 
+				3. Approve or Reject one by one
+				4. Exit")
+		READ approval
+		if approval=1
+			OPEN Customers.txt as fin in READ MODE
+			READ data1 INTO fin
+			data=REPLACE "Pending Approval" with "Approved"
+			CLOSE fin
+			OPEN Customers.txt as fin in WRITE MODE
+			WRITE data
+			CLOSE fin
+			DISPLAY ("All Pending Requests are Approved Successfully")
+		
+		ELIF approval=2
+			OPEN Customers.txt as fin in READ MODE
+			READ data1 INTO fin
+			data=REPLACE "Pending Approval" with "Rejected"
+			CLOSE fin
+			OPEN Customers.txt as fin in WRITE MODE
+			WRITE data
+			CLOSE fin
+			DISPLAY ("All Pending Requests are Rejected Successfully")
+		ELIF approval =3
+			OPEN("Customers.txt",'r') as f in READ MODE
+            for tine in f:
+                if len(tine)>0:
+                    SPLIT tine into tist
+                    if tist[15]=="Pending":
+                        DISPLAY(tine)
+                        DISPLAY("Enter 1 for APPROVE or 2 for REJECT")
+						READ tam
+                        OPEN("Customers.txt") as testfile, open("Customers.txt") as testfile2 in READ MODE
+                            SPLIT testfile2 into coolnewread
+                            k=0
+                            for j in coolnewread:
+                                SPLIT j into j2
+                                if "Pending"==j2[15]:
+                                    for line in testfile:
+                                        if tam=="1":
+                                            SPLIT line into testlist
+                                            thebiglist=Replace("Pending Approval","Approved")
+                                            if j2[2]==testlist[2]:
+                                                coolnewread[k]=thebiglist
+                                            else:
+                                                pass
+                                        else:
+                                            SPLIT line into testlist
+                                            thebiglist=Replace("Pending Approval","Rejected")
+                                            thebiglist2=thebiglist
+                                            if j2[2]==testlist[2]:
+                                                coolnewread[k]=thebiglist2
+                                            else:
+                                                pass
+											ENDIF
+										ENDIF
+									ENDFOR
+                                else:
+                                    pass
+                                k=k+1
+								ENDIF
+								
+                            coolnewread2="".join(coolnewread)
+                            OPEN("Customers.txt") as testfile3 in WRITE MODE
+                           WRITE contents in testfile3
+                            CLOSE testfile3
+							ENDFOR
+						CLOSE testfile
+						CLOSE testfile2
+					ENDIF	
+				ENDIF
+			
+					
+							
+							
+ 
+            else:
+                print("No more Approvals Pending")
+                print()
+                admin_functions()
+			ENDFOR
+			CLOSEf
+		
+		ENDIF
+	
+	END FUNCTION
+	
+	FUNCTION admin_func_3
+		DECLARE loginInfo as ARRAY
+		DECLARE loan_id as INTEGER
+		DECLARE loan_info as ARRAY
+		DECLARE loan_amt as FLOAT
+        DECLARE loan_type as STRING
+        DECLARE loan_month as INTEGER
+        DECLARE username as STRING
+        DECLARE password as STRING
+        DECLARE years as INTEGER
+        DECLARE months as INTEGER
+		
+		OPEN Customers.txt as f in READ MODE
+		OPEN Loan Info.txt as f1 in APPEND MODE
+		READ contents from f
+		FOR line in f
+			SPLIT line as loginInfo
+			if "Approved"=loginInfo[14] and "Loan ID Unassigned "= loginInfo[15]
+				loan_info=loginInfo
+				import random
+				loan_Id=random.randint(1000.10000)
+				name=loan_info[0]
+                loan_amt =loan_info[11]
+                loan_type=loan_info[10]
+                loan_month=loan_info[12]
+                username=loan_info[2]
+                password=loan_info[3]
+                years=int(loan_info[13])
+                months=years*12
+				
+				WRITE contents in f1 
+				Contents =(name,loan_Id,username,password,loan_type,loan_amt,loan_month,months)
+				CLOSE f 
+				CLOSE f1
+				OPEN Customers.txt as fin in READ MODE
+				READ data1 INTO fin
+				data=REPLACE "Loan ID Unassigned" with "Loan ID Assigned"
+				CLOSE fin
+				OPEN Customers.txt as fin in WRITE MODE
+				WRITE data
+				CLOSE fin
+				DISPLAY ("Loan Ids Assigned Successfully")
+			ENDIF
+		ENDFOR
+	END FUNCTION
+	
+	FUNCTION admin_func_4()
+		DECLARE record as BOOLEAN
+		DECLARE file_read as ARRAY
+		
+		record=False
+		DISPLAY("Enter Customers Loan ID":)
+		READ loan_id
+		OPEN transactions.txt as file in READ MODE
+		READ contents from file
+		FOR line in file
+			SPLIT line to file_read
+			IF loan_id = file_read[1]
+				liner=line.rstrip()
+				DISPLAY line
+				record=True
+			ENDIF
+		ENDFOR
+		IF record=True
+			pass
+		ELSE
+			DISPLAY("No Such Record Exists")
+		ENDIF
+		CLOSE nfile
+	
+	END FUNCTION
+
+
+	FUNCTION admin_transac_view(loan)
+		DECLARE record as BOOLEAN
+		loan_Info as ARRAY
+		
+		record=False
+		OPEN transactions.txt as file IN READ mode
+		READ contents from file
+		FOR line IN file
+			loan_Info=line.split('\t')
+			IF loan=loan_Info[2]
+				DISPLAY(line)
+				record=True
+			ENDIF
+		if record==True:
+			pass
+		else:
+		DISPLAY("No Transactions Exists under the Selected Type of Loan")
+		ENDFOR
+		CLOSE file
+	END FUNCTION
+		
+		
+
+
+	FUNCTION admin_func_5()
+		DECLARE loan_type as STRING
+		DECLARE loan as STRING
+		DECLARE exit as STRING
+		DECLARE loan_Info as ARRAY
+	
+		DISPLAY("Types of Loans:
+                    1.Education Loan
+                    2.Home Loan
+                    3.Personal Loan
+                    4.Car Loan ")
+		DISPLAY("Enter Type Of Loan You Want")	
+		READ loan_type
+		IF loan_type=1:
+			loan="Education Loan"
+			CALL admin_transac_view(loan)
+		
+		ELIF loan_type=2:
+			loan="Home Loan"
+			CALL admin_transac_view(loan)			
+		
+		ELIF loan_type=3:
+			loan="Personal Loan"
+			CALL admin_transac_view(loan)
+		
+		ELIF loan_type=4:
+			loan="Car Loan"
+			CALL admin_transac_view(loan)
+		ELSE 
+			DISPLAY ("Invalid Entry
+					Please Try Again")
+		DISPLAY ("Enter any key to go back to options")	
+		READ exit
+		
+		ENDIF
+	
+	END FUNCTION
+	
+	
+	FUNCTION admin_func_6
+		DECLARE liner as ARRAY
+		DECLARE line as STRING
+		
+		OPEN transactions.txt as file in READ mode
+		READ contents from file
+		FOR line IN file:
+			liner=line.rstrip()
+			DISPLAY(liner)
+		ENDFOR
+		CLOSE file
+	END FUNCTION
+	
+	FUNCTION admin_func_7
+		DECLARE liner as ARRAY
+		DECLARE line as STRING
+		
+		OPEN transactions.txt as file in READ mode
+		READ contents from file
+		FOR line IN file:
+			liner=line.rstrip()
+			DISPLAY(liner)
+		ENDFOR
+		CLOSE file
+	END FUNCTION
+	
+	FUNCTION admin_func_8()
+		DECLARE record as BOOLEAN
+		DECLARE nfile_read as ARRAY
+		
+		OPEN Customers.txt as nfile in READ MODE
+		READ contents from file
+		record=False
+		FOR line in nfile
+			SPLIT line to nfile_read
+			IF "Approved" ==nfile_read[14]
+				DISPLAY line
+				record=True
+			ENDIF
+		ENDFOR
+		IF record=True
+			pass
+		ELSE
+			DISPLAY("No new pending registeration requests")
+		ENDIF
+		CLOSE nfile
+	
+	END FUNCTION
+	
+	FUNCTION admin_func_9()
+		DECLARE record as BOOLEAN
+		DECLARE nfile_read as ARRAY
+		
+		OPEN Customers.txt as nfile in READ MODE
+		READ contents from file
+		record=False
+		FOR line in nfile
+			SPLIT line to nfile_read
+			IF "Rejected" ==nfile_read[14]
+				DISPLAY line
+				record=True
+			ENDIF
+		ENDFOR
+		IF record=True
+			pass
+		ELSE
+			DISPLAY("No new pending registeration requests")
+		ENDIF
+		CLOSE nfile
+	
+	END FUNCTION
+		
+	
+	FUNCTION new_customer()
+		DECLARE options3 as BOOLEAN
+		DECLARE newc_func as INTEGER
+		DECLARE exit
+		
+		options3 = True
+		while options3:
+            DISPLAY('''Options:
+                1. Check Loan details
+                2. Use Loan Calculator
+                3. Register
+                4. Exit''')
+			DISPLAY ("Kindly Select an option: ")	
+            READ newc_func
+			IF (newc_func=1)
+				CALL loan_details()
+			ELIF(newc_func=2)
+				CALL loan_calcs()
+				
+			ELIF(newc_func=3)
+				CALL register()
+				
+			ELIF(newc_func=4)
+				CALL main_menu()
+			
+			ELSE
+				DISPLAY("Invalid Entry 
+						Please Try Again")
+			
+			ENDIF
+			DISPLAY ("Enter any key to go back to options")	
+			READ exit
+		
+		ENDWHILE		
+	
+	END FUNCTION	
+	
+	FUNCTION loan_details()
+		DECLARE loan_detail as INTEGER
+		DECLARE exit as STRING
+		DECLARE edul_read as STRING
+		DECLARE homel_read as STRING
+		DECLARE pl_read as STRING
+		DECLARE cl_read as STRING
+		DECLARE options4 as BOOLEAN
+		
+		options4=True
+		while options4
+			DISPLAY(''' Types of Loans:
+								1.Education Loan
+								2.Home Loan
+								3.Personal Loan
+								4.Car Loan
+								5. EXIT''')
+			DISPLAY ("Kindly select an option to view more details:")			
+			READ loan_detail
+					
+			IF (loan_detail = 1) 
+				OPEN Education Loan.txt as edul in READ mode
+				READ Contents from edul as edul_read
+				DISPLAY (edul_read)
+						
+			ELIF (loan_detail = 2)
+				OPEN Home Loan.txt as homel in READ mode
+				READ contents from homel as homel_read
+				DISPLAY (homel_read)
+					
+			ELIF (loan_detail = 3)
+				OPEN Personal Loan.txt as pl in READ mode
+				read contents from pl as pl_read
+				DISPLAY (pl_read)
+			
+			ELIF (loan_detail = 4)
+				OPEN Car Loan.txt as cl in READ mode
+				READ contents from cl as cl_read
+				DISPLAY (cl_read)
+			
+			ElIF (loan_detail=5)
+				new_customer()
+			ELSE
+				DISPLAY("Invalid Entry")
+			ENDIF
+			DISPLAY ("Enter any key to go back to options")	
+			READ exit
+		ENDWHILE
+	
+	END FUNCTION
+	
+	FUNCTION loan_calcs()
+		DECLARE options4 as BOOLEAN
+		DECLARE laon_calc as INTEGER
+		
+		options4=True
+		while options4
+			DISPLAY(''' Types of Loans:
+								1.Education Loan
+								2.Home Loan
+								3.Personal Loan
+								4.Car Loan
+								5.EXIT''')
+			DISPLAY ("Kindly select an option to calculate loan:")			
+			READ loan_calc
+			
+			IF (loan_calc=1)
+				CALL loan_calc_el()
+			ELIF (loan_calc=2)
+				CALL loan_calc_hl()
+			ELIF (loan_calc=3)
+				CALL loan_calc_pl()
+			ELIF (loan_calc=4)
+				CALL loan_calc_cl()
+			ElIF (loan_calc=5)
+				new_customer()
+			ELSE
+				DISPLAY ("Invalid Entry")
+				
+			ENDIF
+			DISPLAY ("Enter Any Key to go back to options")
+			READ exit
+		ENDWHILE
+	END FUNCTION
+		
+ 	
+	FUNCTION loan_calc_el()
+		DECLARE loan_years as INTEGER
+		DECLARE loan_amt as FLOAT
+		DECLARE rate as INTEGER
+		DECLARE period_rate as INTEGER
+		DECLARE num_payments as INTEGER
+		DECLARE total_cost as FLOAT
+		DECLARE payment_amt as FLOAT
+		DECLARE wrongloan as BOOLEAN
+		DECLARE wrongyear as BOOLEAN
+		
+		wrongloan=True
+		while wrongloan
+			DISPLAY ("Enter the loan amount:RM")
+			READ loan_amt
+			IF loan_amt>200000
+				DISPLAY("Sorry! We don't provide loan for more than RM200,000")
+			ELSE
+				break
+			ENDIF
+		ENDWHILE
+		wrongyear=True
+		WHILE wrongyear
+			DISPLAY ("How many years will you take to repay the loan? (Max=15yrs)")
+			READ loan_years
+			IF loan_years>15
+				DISPLAY("Sorry! We don't provide loan for more than 15 years")
+			ELSE
+				break
+			ENDIF
+		ENDWHILE
+		DISPLAY ("No of years",loan_years)
+		IF (loan_years<10)
+			rate=7.6
+			DISPLAY ("Interest rate=",rate,"% p.a")
+			period_rate=rate/12/100
+            num_payments=loan_years*12
+            payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+            total_cost= num_payments * payment_amt - loan_amt
+            DISPLAY("The Payment Amount is RM"+format(payment_amt,",.2f"),"per month")
+            DISPLAY("The Total Cost of Borrowing is RM"+format(total_cost,",.2f"))
+			DISPLAY("The Total Loan Amount with Interest is  RM"+format(total_loanamt,",.2f"))  
+		
+		ELIF (10<=loan_years<15)
+			rate=8.1
+			DISPLAY ("Interest rate=",rate,"% p.a")
+			period_rate=rate/12/100
+            num_payments=loan_years*12
+            payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+            total_cost= num_payments * payment_amt - loan_amt
+            DISPLAY("The Payment Amount is RM"+format(payment_amt,",.2f"),"per month")
+            DISPLAY("The Total Cost of Borrowing is RM"+format(total_cost,",.2f"))
+			DISPLAY("The Total Loan Amount with Interest is  RM"+format(total_loanamt,",.2f"))
+		ENDIF
+	END FUNCTION
+		
+            
+	FUNCTION loan_calc_hl ()
+		DECLARE loan_years as INTEGER
+		DECLARE rate as INTEGER
+		DECLARE period_rate
+		DECLARE num_payments as FLOAT
+		DECLARE total_cost as FLOAT
+		DECLARE payment_amt as FLOAT
+		DECLARE income as FLOAT
+		DECLARE exit as STRING
+		DECLARE max_amt as INTEGER
+		DECLARE loan_amt as FLOAT
+		
+		DISPLAY ("Enter your Annual Income: RM")
+		READ income
+		max_amt=income/0.2
+		DISPLAY ("Maximum Amount that can be borrowed from the bank according to income = RM",max_amt")
+		DISPLAY ("Enter the loan amount:RM")
+		READ loan_amt
+		DISPLAY ("How many years will you take to repay the loan? (Min=5yrs and Max=15yrs)")
+		READ loan_years
+		DISPLAY ("No of years:",loan_years,"yrs")
+		IF (loan_amt <=max_amt and loan_years <=40)
+			rate=5
+			DISPLAY ("Interest rate=",rate,"% p.a")
+			period_rate=rate/12/100
+			num_payments=loan_years*12
+			payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+			total_cost= num_payments * payment_amt - loan_amt
+			DISPLAY("The Payment Amount is RM"+format(payment_amt,",.2f"),"per month")
+			DISPLAY("The Total Cost of Borrowing is RM"+format(total_cost,",.2f"))
+			DISPLAY("The Total Loan Amount with Interest is  RM"+format(total_loanamt,",.2f"))
+		ELSE 
+			DISPLAY("Sorry,the required loan amount is more than your maximum loan amount")
+			DISPLAY("OR")
+			DISPLAY("We dont provide loan for a tenure more than 40 years")
+		ENDIF
+	END FUNCTION
+		
+	FUNCTION loan_calc_pl()
+		DECLARE loan_years as INTEGER
+		DECLARE rate as FLOAT
+		DECLARE period_rate as INTEGER
+		DECLARE num_payments as FLOAT
+		DECLARE total_cost as FLOAT
+		DECLARE payment_amt as FLOAT
+		DECLARE income as FLOAT
+		DECLARE exit as STRING
+		DECLARE loan_amt as FLOAT
+		
+		wrongloan=True
+		while wrongloan
+			DISPLAY ("Enter the Amount of Loan you require:RM")
+			READ loan_amt
+			if (loan_amt >= 100000):
+				DISPLAY("Sorry! We don't provide loan for more than RM100,000")
+			else:
+				break
+			ENDIF
+		ENDWHILE
+		
+		wrongyears=True
+		while wrongyears
+			DISPLAY ("How many years will you take to repay the loan? (Min=5yrs and Max=15yrs)")
+			READ loan_years
+			if (loan_years>=6):
+				DISPLAY("Sorry! We don't provide loan for a tenure more than 6 years")
+			else:
+				break
+			ENDIF
+		ENDWHILE
+		
+		DISPLAY ("No of years:",loan_years,"yrs")
+		IF (5000<=loan_amt<20000 and 2<=loan_years<6)
+			rate=8
+			DISPLAY ("Interest rate=",rate,"% p.a")
+			period_rate=rate/12/100
+			num_payments=loan_years*12
+			payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+			total_cost= num_payments * payment_amt - loan_amt
+			DISPLAY("The Payment Amount is RM"+format(payment_amt,",.2f"),"per month")
+			DISPLAY("The Total Cost of Borrowing is RM"+format(total_cost,",.2f"))
+			DISPLAY("Press Any Key to go back to options")	
+			READ exit 
+		ELIF (20001<=loan_amt<50000 and 2<=loan_years<6)
+			rate=7
+			DISPLAY ("Interest rate=",rate,"% p.a")
+			period_rate=rate/12/100
+			num_payments=loan_years*12
+			payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+			total_cost= num_payments * payment_amt - loan_amt
+			DISPLAY("The Payment Amount is RM"+format(payment_amt,",.2f"),"per month")
+			DISPLAY("The Total Cost of Borrowing is RM"+format(total_cost,",.2f"))
+			DISPLAY("Press Any Key to go back to options")
+			READ exit
+		ELIF (50001<=loan_amt<100000 and 2<=loan_years<6)
+			rate=6.5
+			DISPLAY ("Interest rate=",rate,"% p.a")
+			period_rate=rate/12/100
+			num_payments=loan_years*12
+			payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+			total_cost= num_payments * payment_amt - loan_amt
+			DISPLAY("The Payment Amount is RM"+format(payment_amt,",.2f"),"per month")
+			DISPLAY("The Total Cost of Borrowing is RM"+format(total_cost,",.2f"))
+			DISPLAY("Press Any Key to go back to options")
+			READ exit
+		
+		ElSE 
+			DISPLAY("Sorry! We don't provide personal loan for more than RM 100000")
+			DISPLAY ("OR")
+			DISPLAY("For a tenure less than 2 years or more than 6 years ")
+		ENDIF
+	END FUNCTION
+	
+	
+	FUNCTION loan_calc_cl()
+		DECLARE loan_years
+		DECLARE rate
+		DECLARE period_rate
+		DECLARE num_payments
+		DECLARE total_cost
+		DECLARE payment_amt
+		DECLARE income
+		DECLARE exit
+	
+		DISPLAY ("Enter the Amount of Loan you require:RM")
+		READ loan_amt
+		DISPLAY ("How many years will you take to repay the loan? (Max=10yrs)")
+		READ loan_years
+		DISPLAY ("No of years:",loan_years,"yrs")
+		
+		IF( 0 <loan_years=<10)
+			rate=10
+			DISPLAY ("Interest rate=",rate,"% p.a")
+			period_rate=rate/12/100
+			num_payments=loan_years*12
+			payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+			total_cost= num_payments * payment_amt - loan_amt
+			DISPLAY("The Payment Amount is RM"+format(payment_amt,",.2f"),"per month")
+			DISPLAY("The Total Cost of Borrowing is RM"+format(total_cost,",.2f"))
+			DISPLAY("Press Any Key to go back to options")
+			READ exit
+		ELSE
+		`	DISPLAY("Sorry! We don't provide car loan for more than 10years")
+		ENDIF
+	
+	END FUNCTION
+	
+	FUNCTION register()	
+		DECLARE newc_name as STRING
+		DECLARE newc_age as INTEGER
+		DECLARE newc_address as STRING
+		DECLARE newc_emial as STRING
+		DECLARE newc_contact as INTEGER
+		DECLARE wronggender as BOOLEAN
+		DECLARE newc_gender as INTEGER
+		DECLARE gender as STRING
+		DECLARE newc_dob as STRING
+		DECLARE newc_income as FLOAT
+		DECLARE wrong_type as BOOLEAN
+		DECLARE newc_loantype as INTEGER
+		DECLARE wrongloan as BOOLEAN
+		DECLARE loan as STRING 
+		DECLARE loan_amt as FLOAT
+		DECLARE wrongyear as BOOLEAN
+		DECLARE loan_years as INTEGER
+		DECLARE rate as INTEGER
+		DECLARE period_rate as INTEGER
+		DECLARE num_payments as INTEGER
+		DECLARE total_cost as FLOAT
+		DECLARE payment_amt as FLOAT
+		DECLARE newc_loanamt as FLOAT
+		DECLARE newc_loanmonth as FLOAT
+		DECLARE max_amt as INTEGER
+		DECLARE username as STRING
+		DECLARE password as STRING
+		DECLARE userwrong as BOOLEAN
+		DECLARE wrong pass as BOOLEAN
+		DECLARE loginInfo as ARRAY
+		DECLARE record as BOOLEAN
+		DECLARE newc_passw as STRING
+		DECLARE newc_rewrite as STRING
+		DECLARE username1 as STRING
+		DECLARE confirm as STRING
+		
+		DISPLAY("Enter Your Name Here:")
+		READ newc_name
+		DISPLAY(input("Enter your age: "))
+		READ newc_age
+		DISPLAY("Enter Your Residential Address Here: ")
+		READ newc_address
+		DISPLAY("Enter Your Email ID Here: ")
+		READ newc_email
+		DISPLAY("Enter Your Phone number Here:"))
+		READ newc_contact
+		wronggender= True
+		while wronggender:
+			DISPLAY("Enter Your Choice (1.Male 2.Female 3.Other) :"))
+			READ newc_gender
+			if newc_gender=1:
+				gender="Male"
+				break
+			elif newc_gender=2:
+				gender="Female"
+				break
+			elif newc_gender=3:
+				gender="Other"
+				break
+			else:
+				DISPLAY("Invalid Entry")
+				DISPLAY("Please try again")
+			ENDIF
+		ENDWHILE
+				
+			
+		DISPLAY("Enter Your Date Of Birth Here(dd/mm/yyyy) :")
+		READ newc_dob
+		DISPLAY("Enter your annual income:RM"))
+		READ newc_income
+		wrong_type=True
+		while wrong_type:
+			DISPLAY('''          Types of Loans:
+			1.Education Loan (MAX loan amt = RM 200,000;MAX tenure = 15yrs)
+			2.Home Loan      (MAX loan amt = Depends on your salary;MAX tenure = 40yrs)
+			3.Personal Loan  (MAX loan amt = RM 100,000 ; MAX tenure = 6 years 
+			4.Car Loan       (MAX loan amt = RM 100,000: MAX tenure= 10 years''')
+
+
+			DISPLAY("Select the type Of loan according to your requirements? "))
+			READ newc_loantype
+			if newc_loantype==1:
+				loan="Education Loan"
+				wrongloan=True
+				while wrongloan:
+					DISPLAY("Enter the loan amount (Max = RM200,000) :RM "))
+					READ loan_amt
+					if (loan_amt > 200000):
+						DISPLAY("Sorry! We don't provide loam for more than RM200,000")
+					else:
+						break
+					ENDIF
+				ENDWHILE
+				
+				wrongyear=True
+				while wrongyear:
+					DISPLAY("How many years will you take to repay the loan? (Max=15yrs):"))
+					READ loan_years
+					DISPLAY("No of years:",loan_years,"yrs")
+
+					if (0<loan_years<10):
+						rate=7.6
+						DISPLAY ("Interest rate=",rate,"% p.a")
+						period_rate=rate/12/100
+						num_payments=loan_years*12
+						payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+						total_cost= num_payments * payment_amt - loan_amt
+						total_loanamt=total_cost+loan_amt
+						newc_loanamt=format(total_loanamt,".2f")
+						newc_loanmonth=format(payment_amt,".2f")
+						break
+					elif (10<=loan_years<15):
+						rate=8.1
+						DISPLAY ("Interest rate=",rate,"% p.a")
+						period_rate=rate/12/100
+						num_payments=loan_years*12
+						payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+						total_cost= num_payments * payment_amt - loan_amt
+						total_loanamt=total_cost+loan_amt
+						newc_loanamt=format(total_loanamt,".2f")
+						newc_loanmonth=format(payment_amt,".2f")
+						break
+					else :
+						DISPLAY("Sorry! We don't provide loan for more than 15 years")
+					ENDIF
+				ENDWHILE
+					
+			elif newc_loantype==2:
+				loan="Home Loan"
+				max_amt=newc_income/0.2
+				DISPLAY("Maximum Amount that can be borrowed from the bank according to income = RM",max_amt)
+				wrongamt=True
+				while wrongamt:
+					DISPLAY("Enter the loan amount:RM "))
+					READ loan_amt
+					DISPLAY("How many years will you take to repay the loan?(Max 40 years)"))
+					READ loan_years
+					DISPLAY("No of years:",loan_years,"yrs")
+					if loan_amt <=max_amt and loan_years <=40:
+						rate=5
+						DISPLAY ("Interest rate=",rate,"% p.a")
+						period_rate=rate/12/100
+						num_payments=loan_years*12
+						payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+						total_cost= num_payments * payment_amt - loan_amt
+						total_loanamt=total_cost+loan_amt
+						newc_loanamt=format(total_loanamt,".2f")
+						newc_loanmonth=format(payment_amt,".2f")
+						break
+
+					else:
+						DISPLAY("Sorry,the required loan amount is more than your maximum loan amount")
+						DISPLAY("OR")
+						DISPLAY("We dont provide loan for a tenure more than 40 years")
+					ENDIF	
+				ENDWHILE
+
+
+			elif newc_loantype==3:
+				loan="Personal Loan"
+				wrong=True
+				while wrong:
+					DISPLAY("Enter the loan amount (Max = RM100,000) :RM "))
+					READ loan_amt
+					if (loan_amt > 100000):
+						DISPLAY("Sorry! We don't provide loan for more than RM100,000")
+					else:
+						break
+					ENDIF
+				ENDWHILE
+				wrongyears=True
+				while wrong:
+					DISPLAY("How many years will you take to repay the loan?( Maximum=6years)" ))
+					READ loan_years
+					DISPLAY("No of years:",loan_years,"yrs")
+					if (loan_years<=6):
+						break
+					else:
+						DISPLAY("Sorry! We don't provide loan for a tenure more than 6 years")        
+					ENDIF
+				ENDWHILE
+				
+				if (loan_amt<20000 and 2<=loan_years<6):
+					rate=8
+					DISPLAY ("Interest rate=",rate,"% p.a")
+					period_rate=rate/12/100
+					num_payments=loan_years*12
+					payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+					total_cost= num_payments * payment_amt - loan_amt
+					total_loanamt=total_cost+loan_amt
+					newc_loanamt=format(total_loanamt,".2f")
+					newc_loanmonth=format(payment_amt,".2f")                                       
+
+				elif (20001<=loan_amt<50000 and 2<=loan_years<6):
+					rate=7
+					DISPLAY ("Interest rate=",rate,"% p.a")
+					period_rate=rate/12/100
+					num_payments=loan_years*12
+					payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+					total_cost= num_payments * payment_amt - loan_amt
+					total_loanamt=total_cost+loan_amt
+					newc_loanamt=format(total_loanamt,".2f")
+					newc_loanmonth=format(payment_amt,".2f") 
+
+				elif (50001<=loan_amt<100000 and 2<=loan_years<6):
+					 rate=6.5
+					 DISPLAY ("Interest rate=",rate,"% p.a")
+					 period_rate=rate/12/100
+					 num_payments=loan_years*12
+					 payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+					 total_cost= num_payments * payment_amt - loan_amt
+					 total_loanamt=total_cost+loan_amt
+					 newc_loanamt=format(total_loanamt,".2f")
+					 newc_loanmonth=format(payment_amt,".2f") 
+				ENDIF
+			
+
+
+			elif newc_loantype==4:
+				loan="Car Loan"
+				wrongamt=True
+				while wrongamt:
+					DISPLAY("Enter the loan amount you require (Max = RM100,000) :RM "))
+					READ loan_amt
+					if (loan_amt > 100000):
+						DISPLAY("Sorry! We don't provide loan for more than RM100,000")
+					else:
+						break
+					ENDIF
+				ENDWHILE
+				
+				wrongyear=True
+				while wrongyear:
+					DISPLAY("Tenure(Max 10 years):"))
+					READ loan_years
+					DISPLAY("No of years:",loan_years,"yrs")
+					if 0<loan_years<=10:
+						rate=10
+						DISPLAY ("Interest rate=",rate,"% p.a")
+						period_rate=rate/12/100
+						num_payments=loan_years*12
+						payment_amt= period_rate * loan_amt/(1-(1+period_rate) **-num_payments)
+						total_cost= num_payments * payment_amt - loan_amt
+						total_loanamt=total_cost+loan_amt
+						newc_loanamt=format(total_loanamt,".2f")
+						newc_loanmonth=format(payment_amt,".2f") 
+						break
+					else:
+						DISPLAY("Sorry! We dont provide car loan for a tenure more than 10 years")
+					ENDIF
+				ENDWHILE
+
+
+			else:
+				DISPLAY("Invalid Entry")
+				DISPLAY ("Please try again")
+			ENDIF
+		ENDWHILE
+		
+		userwrong=True
+		while userwrong:
+			DISPLAY("Enter Your Username: ")
+			READ username
+			OPEN("Customers.txt") as f in READ MODE
+			record=False
+			for line in f:
+				SPLIT line into loginInfo
+				if username==loginInfo[2] and "Approved"==loginInfo[14]:
+					DISPLAY("Username Exists")
+					DISPLAY("Please Try Again with a different username")      
+					record=True
+				ENDIF
+			ENDFOR
+			if record==True:
+					DISPLAY("Username Exists")
+					DISPLAY("Please Try Again")
+					break
+			else:
+				 username1=username
+				 break
+			ENDIF
+			CLOSE file
+		ENDWHILE
+		
+		wrongpass=True
+		while wrongpass:
+			DISPLAY("Create a unique password: ")
+			READ newc_passw
+			DISPLAY("Rewrite Password :")
+			READ newc_rewrite
+			if (newc_rewrite==newc_passw):
+				 DISPLAY ("Password matches")
+				 password1=newc_passw
+				 break
+			else:
+				 DISPLAY("Password doesn't match")
+				 DISPLAY("Please Try Again")
+			ENDIF
+		ENDWHILE
+		DISPLAY("Review Your Information before submitting")
+		DISPLAY()
+		DISPLAY("Name:",newc_name)
+		DISPLAY("Age:",newc_age,"years")
+		DISPLAY("Address:",newc_address)
+		DISPLAY("Email:",newc_email)
+		DISPLAY("Contact Number:",newc_contact)
+		DISPLAY("Gender:",gender)
+		DISPLAY("Date Of Birth",newc_dob)
+		DISPLAY("Your Annual Income:RM",newc_income)
+		DISPLAY("Loan Type:",loan)
+		DISPLAY("Loan Amount with Interest:RM",newc_loanamt)
+		DISPLAY("Monthly Instalment:RM",newc_loanmonth,"per month")
+		DISPLAY("Loan Tenure:",loan_years,"years")
+		DISPLAY("Username:",username1)
+		DISPLAY("Password",password1)
+		
+		DISPLAY("Do you want to submit your details for approval? (yes/no)")
+		READ confirm
+		if confirm =="yes":
+			open("Customers.txt") as file in APPEND MODE
+			WRITE contents in file
+			Contents=(newc_name+"\t"+str(newc_age)+"\t"+username1+"\t"+password1+"\t"+newc_address+"\t"+newc_email+"\t"+str(newc_contact)+"\t"+gender+"\t"+newc_dob+"\t"+str(newc_income)+"\t"+loan+"\t"+str(newc_loanamt)+"\t"+str(newc_loanmonth)+"\t"+str(loan_years)+"\t"+"Pending Approval"+"\t"+"Loan ID Unassigned"+"\n")
+			CLOSE file
+			DISPLAY("Thank You For Registering With Malaysia Bank")
+			DISPLAY("Pending Approval from Admin")
+			DISPLAY("Check the status of your Loan Registeration Request under Registered Customer from the main menu")
+			DISPLAY()
+		ENDIF
+	END FUNCTION
+    
+	FUNCTION registered_customer
+		DECLARE username as STRING
+		DECLARE passwood as STRING
+		
+		DISPLAY("Enter Your Username: ")
+		READ username
+		DISPLAY("Enter Your Password: ")
+		READ password
+		CALL reg_status(username,password)
+	END FUNCTION
+
+	FUNCTION registered_c_func(username,password)
+		DECLARE options5 as BOOLEAN
+		DECLARE reg_func as INTEGER
+		DISPLAY("Welcome Customer",username)
+		
+		options5 = True
+		while options5:
+            DISPLAY('''Options:
+                1. Check your Loan Details with LOAN Instalment date and LOAN ID
+                2. Pay Loan Instalment
+                3. View all my Transactions
+				4. Check the Status of LOAN
+                5. Exit''')
+			DISPLAY ("Kindly Select an option: ")	
+            READ reg_func
+			IF (reg_func==1)
+				CALL loan_details_reg(username,password)
+			
+			ELIF(reg_func=2)
+				CALL loan_pay()
+				
+			ELIF(reg_func=3)
+				CALL view_transactions()
+				
+			ELIF(reg_func=4)
+				CALL loan_status(username,password)
+			
+			ELIF (reg_func=5)
+				CALL main_menu()
+			ELSE
+				DISPLAY("Invalid Entry")
+				DISPLAY("Please Try Again")
+			
+			ENDIF
+			
+			DISPLAY("Enter Any Key to go back to options")
+			READ exit
+		ENDWHILE		
+	
+	END FUNCTION
+		
+		
+	FUNCTION loan_details_reg()
+		DECLARE loginInfo as ARRAY
+		DECLARE loanInfo as ARRAY
+		
+		OPEN("Customers.txt") as file in READ MODE
+		READ contents from file
+		for line in file:
+			SPLit line into loginInfo
+			if username==loginInfo[2] and "Approved"==loginInfo[14]:
+				DISPLAY(loginInfo)
+			ENDIF
+		ENDFOR
+		CLOSE file
+                
+		OPEN("Loan Info.txt") as file in READ MODE
+		READ Contents from file
+			for line in file:
+				SPLIT line into loanInfo
+				if username==loanInfo[2]:
+					DISPLAY("Name:",loanInfo[0])
+					DISPLAY("Loan Type:",loanInfo[4])
+					DISPLAY("Your Unique loan ID is :",loanInfo[1])
+					DISPLAY("Pleaase Refrain from disclosing your loan ID")		
+				ENDIF
+			ENDFOR
+		CLOSE file
+	END FUNCTION
+
+
+	FUNCTION view_transactions
+		DECLARE record as BOOLEAN
+		DECLARE file_read as ARRAY
+		
+		record=False
+		DISPLAY("Enter Your Unique Loan ID":)
+		READ loan_id
+		OPEN transactions.txt as file in READ MODE
+		FOR line in file
+			SPLIT line to file_read
+			IF loan_id = file_read[1]
+				liner=line.rstrip()
+				DISPLAY line
+				record=True
+			ENDIF
+		ENDFOR
+		IF record=True
+			pass
+		ELSE
+			DISPLAY("No Such Record Exists")
+		ENDIF
+		CLOSE file
+	
+	END FUNCTION
+	
+	
+	
+	FUNCTION loan_pay()
+		DECLARE wrong1 as BOOLEAN
+		DECLARE loan_id as STRING
+		DECLARE loginInfo as ARRAY
+		DECLARE loan_inst as FLOAT
+		DECLARE loan_month as FLOAT
+		DECLARE months as INTEGER
+		DECLARE loan_type as as STRING
+		DECLARE wrong2 as BOOLEAN
+		DECLARE payment as FLOAT
+		DECLARE name as STRING
+		DECLARE credit_card as STRING
+		DECLARE sec_code as STRING
+		DECLARE expiry_date as STRING
+		DECLARE now as STRING
+		DECLARE date_time as STRING
+		DECLARE confirm as STRING
+		DECLARE new_month as INTEGER
+		DECLARE loan_inst1 as STRING
+		DECLARE loan_month2 as STRING
+		DECLARE n_amt as STRING
+		DECLARE n_m as STRING
+		
+		wrong1=True
+		while wrong1:
+			DISPLAY("Enter your Unique Loan ID: ")
+			READ loan_id
+			OPEN("Loan Info.txt") as f in READ MODE
+			READ contents from f
+			OPEN("transactions.txt") as f1 in APPEND MODE
+					for line in f:
+						SPLIT line into loginInfo
+						if loan_id =loginInfo[1]:
+							loan_inst=float(loginInfo[5])
+							loan_month=float(loginInfo[6])
+							months=int(loginInfo[7])
+							DISPLAY("Your Total Instalment with Interest:RM",loan_inst)
+							DISPLAY("Your Monthly Installment:RM",loan_month)
+							loan_type=loginInfo[4]
+							
+							wrong2=True
+							while wrong2:
+								DISPLAY("Enter the exact monthly instalment amount:RM"))
+								READ payment
+								if payment==loan_month:
+									break
+								else:
+									DISPLAY("Amount does not matches the monthy instalment amount")
+								ENDIF
+							ENDWHILE
+							
+							DISPLAY("Enter your name (as in the Card):")
+							READ name
+							DISPLAY("Enter your Card Number:")
+							READ credit_card
+							DISPLAY("Enter your 4 digit security code:")
+							READ sec_code
+							DISPLAY("Enter the expiry date of your card:")
+							READ expiry_date
+							import datetime
+							now = datetime.datetime.now()
+							date_time=(now.strftime("%d-%m-%Y %H:%M:%S"))
+
+							DISPLAY()
+							DISPLAY("Review Your Information Before making the transaction")
+							DISPLAY()
+							DISPLAY("Name:",name)
+							DISPLAY("Loan ID:",loan_id)
+							DISPLAY("Loan Type:",loan_type)
+							DISPLAY("Transaction Amount:RM",payment)
+							DISPLAY("Card Number:",credit_card)
+							confirm =input("Do you want to submit your details for approval? (yes/no)")
+							if confirm =="yes":
+								WRITE contents to f1
+								write(name+"\t"+loan_id+"\t"+loan_type+"\t"+"Transaction Amount:RM"+str(payment)+"\t"+date_time+"\n")
+								new_amt=loan_inst-loan_month
+								new_month=months-1
+								loan_inst1=str(loan_inst)
+								loan_month2=str(months)
+								n_amt=str(new_amt)
+								n_m=str(new_month)
+
+								OPEN("Loan Info.txt") as fin in READ MODE
+								READ contents from fin
+								replace loan_inst1 with n_amt)
+								replace(loan_month2 with n_m)
+								CLOSE fin
+
+								
+								OPEN("Loan Info.txt") as fin in WRITE MODE
+								WRITE contents to fin
+								fin.write(data2)
+								CLOSE fin
+
+								DISPLAY()
+								DISPLAY("Transaction Successful")
+
+							else:
+								registered_c_func()
+							
+							ENDIF
+						ENDIF
+					else:
+						DISPLAY("Invalid Loan ID")	
+					ENDFOR
+			CLOSE f1
+			CLOSEf
+				
+		ENDWHILE
+		
+	END FUNCTION
+
+	FUNCTION loan_status(username,password)
+		DECLARE liner as ARRAY
+		DECLARE amt as FLOAT
+		
+		OPEN("Loan Info.txt") as file in READ MODE
+		READ contents from file
+        for line in file:
+            SPLIT line as liner
+            if username==liner[2]:
+                amt=float(liner[5])
+                DISPLAY("Name:",liner[0])
+                DISPLAY("Loan Type:",liner[4])
+                DISPLAY("Your Total Loan Amount with Interest:RM",format(amt,",.2f"))
+                DISPLAY("Total Number of Months Remaining to Pay:",liner[7],"months")
+			ENDIF
+		ENDFOR
+		CLOSEFILE
+	END FUNCTION	
+
+	FUNCTION reg_status(username,password)
+		DECLARE loginInfo as ARRAY
+		DECLARE exit as STRING
+		
+		OPEN("Customers.txt") as f in READ MODE
+		READ contents from f
+        for line in f:
+            SPLIT line into loginInfo
+            if (username=loginInfo[2] and password= loginInfo[3] and "Pending Approval"=loginInfo[14]):
+                DISPLAY("Pending Approval from the Admin")
+                DISPLAY("Please Check Back Later")
+                exit=input("Enter any key to go back options ")
+
+
+            elif (username=loginInfo[2] and password = loginInfo[3] and "Approved"=loginInfo[14]) :
+                DISPLAY()
+                registered_c_func(username,password)
+
+            elif (username=loginInfo[2] and password = loginInfo[3] and "Rejected"=loginInfo[14]) :
+                DISPLAY()
+                DISPLAY("Sorry,Your Loan Registeration Request has been Rejected ")
+                DISPLAY("Please Try Again with Legitimate Information")
+                DISPLAY()
+                exit=input("Enter any key to go back options ")
+			ENDIF
+        else:
+            DISPLAY("No Record Found")
+            DISPLAY("Please Try Again")
+		ENDFOR
+		CLOSEf
+	END FUNCTION
+			
+	DISPLAY ("Welcome To Malaysia Bank")
+	CALL main_menu()
+	
+END

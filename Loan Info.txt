@@ -1,0 +1,4 @@
+Rahul	3645	rahul1	rahul12	Education Loan	249749.61	1495.51	164
+khalid	7494	khalid1	khalid11	Personal Loan	105657.20	1758.95	58
+Saleem	6589	saleem	saleem1	Education Loan	1643.4099999999999	9.96	164
+Adnan	9767	adnan1	adnan11	Car Loan	110909.58	1912.23	58

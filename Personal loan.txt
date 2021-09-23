@@ -1,0 +1,16 @@
+PERSONAL LOAN
+                                    
+ Eligibility:
+ You are eligible if you comply with the following requirements :
+        Good Income
+        Good Credit Score
+        Minimum Age = 18years
+
+ Tenure:
+         Minimum tenure 2 year
+         Maximum tenure 6 years
+
+ Interest Rates:
+         8% per annum fixed rate for loan amounts of RM5,000 to RM20,000
+         7% per annum fixed rate for loan amounts of RM20,001 to RM50,000
+         6.5% per annum fixed rate for loan amounts of RM50,001 to RM100,000''')
